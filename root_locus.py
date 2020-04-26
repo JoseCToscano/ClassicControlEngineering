@@ -18,11 +18,11 @@ den1=[1,3,2,0]
 num3=[1,3]
 den3=[1,7,14,8,0]
 pdf = FPDF()
-pdf.add_page()
-pdf.set_xy(10, 10)
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "Root Locus answersheet", 0, 2, 'L')
-pdf.cell(200, 10, "-José Toscano", 0, 2, 'L')
+#pdf.add_page()
+#pdf.set_xy(10, 10)
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "Root Locus answersheet", 0, 2, 'L')
+#pdf.cell(200, 10, "-José Toscano", 0, 2, 'L')
 
 num=num4
 den=den4
@@ -33,29 +33,29 @@ all_points = np.concatenate([[-np.Infinity] ,zeros,poles])
 all_points.sort()
 all_real_points = np.real(all_points[np.isreal(all_points)])
 print("Range in real axis :")
-pdf.cell(60, 10, "Range in real axis :", 0, 2, 'L')
+##pdf.cell(60, 10, "Range in real axis :", 0, 2, 'L')
 range_of_real_axis= []
 for i in range(len(all_real_points)-1,0, -2):
     print("From " + str(all_real_points[i-1]) + " to " + str(all_real_points[i]))
-    pdf.set_font('arial', '', 11.0)
-    pdf.cell(60, 10, "From " + str(round(all_real_points[i-1])) + " to " + str(round(all_real_points[i])), 0, 2, 'L')
+   ##pdf.set_font('arial', '', 11.0)
+   ##pdf.cell(60, 10, "From " + str(round(all_real_points[i-1])) + " to " + str(round(all_real_points[i])), 0, 2, 'L')
     range_of_real_axis += [all_real_points[i-1], all_real_points[i]]
 t, y = control.step_response(G, None, 0, 0)
 print("The starting points are:"+ str(poles))
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "The starting points are:", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
-pdf.cell(200, 10,  str(poles), 0, 2, 'L')
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "The starting points are:", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
+#pdf.cell(200, 10,  str(poles), 0, 2, 'L')
 print("The ending points are:" + str(zeros))
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "The ending points are:", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
-pdf.cell(200, 10,  str(zeros), 0, 2, 'L')
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "The ending points are:", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
+#pdf.cell(200, 10,  str(zeros), 0, 2, 'L')
 print("The total number of branches is: " + str(len(poles)))
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "The total number of branches is: ", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
-pdf.cell(200, 10,  str(len(poles)), 0, 2, 'L')
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "The total number of branches is: ", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
+#pdf.cell(200, 10,  str(len(poles)), 0, 2, 'L')
 sum_of_inverse_zeros = 0
 sum_of_inverse_poles = 0
 for zero in zeros:
@@ -73,16 +73,16 @@ for j in range(0,len(values_of_s)):
         except:
                 print("An exception occurred")
 print("Break-away/Break-in  points are: " + str(breakaway_points))
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "Break-away/Break-in  points are: " , 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
-pdf.cell(200, 10,str(breakaway_points), 0, 2, 'L')
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "Break-away/Break-in  points are: " , 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
+#pdf.cell(200, 10,str(breakaway_points), 0, 2, 'L')
 
 all_points_imaginary_form = np.imag(all_points[np.isreal(all_points)])
 
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10,"The departure/arrival angles for poles/zeros are the following:", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10,"The departure/arrival angles for poles/zeros are the following:", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
 for i in range(1,len(poles)+1):
     #print("testing point is: " + str(poles[i-1]))
     sum_of_poles_angles=0
@@ -129,7 +129,7 @@ for i in range(1,len(poles)+1):
         values_equation += 360
 
     print("Angle for s=" + str(poles[i-1]) + "is:" + str(values_equation))
-    pdf.cell(200, 10, "Angle for s=" + str(poles[i-1]) + "is:    " + str(values_equation), 0, 2, 'L')
+   ##pdf.cell(200, 10, "Angle for s=" + str(poles[i-1]) + "is:    " + str(values_equation), 0, 2, 'L')
     
 
 for i in range(1,len(zeros)+1):
@@ -177,32 +177,32 @@ for i in range(1,len(zeros)+1):
     if values_equation < 0:
         values_equation += 360
     print("Angle for s=" + str(zeros[i-1])+ "is: " + str(values_equation))
-    pdf.cell(200, 10, "Angle for s=" + str(zeros[i-1])+ "is:    " + str(values_equation), 0, 2, 'L')
+   ##pdf.cell(200, 10, "Angle for s=" + str(zeros[i-1])+ "is:    " + str(values_equation), 0, 2, 'L')
 
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "Asymptotes:", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "Asymptotes:", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
 
 if len(poles) == len(zeros):
     print("There are no asymptotes")
-    pdf.cell(200, 10, "There are no asymptotes", 0, 2, 'L')
+   ##pdf.cell(200, 10, "There are no asymptotes", 0, 2, 'L')
 if (len(poles) != len(zeros)):
     try:
         LugarDeAsintotas = (np.sum(poles)-np.sum(zeros))/(len(poles)-len(zeros))
         print("Lugar de las asíntotas es: " + str(np.real(LugarDeAsintotas)))
-        pdf.cell(200, 10, "Lugar de las asíntotas es: " + str(np.real(LugarDeAsintotas)), 0, 2, 'L')
+       ##pdf.cell(200, 10, "Lugar de las asíntotas es: " + str(np.real(LugarDeAsintotas)), 0, 2, 'L')
         constant=list(range(-1,10,1))
         for i in range(0,(len(poles)-len(zeros))):
             angulos_asintotas = ((2*constant[i]+1)*180)/(len(poles)-len(zeros))
         print("angulos de las asintotas: " + str(angulos_asintotas))
-        pdf.cell(200, 10,"angulos de las asintotas: " + str(angulos_asintotas), 0, 2, 'L')
+       ##pdf.cell(200, 10,"angulos de las asintotas: " + str(angulos_asintotas), 0, 2, 'L')
     except:
         print("Exception made")
 
 omega= control.phase_crossover_frequencies(G)
-pdf.set_font('arial', 'B', 12.0)
-pdf.cell(200, 10, "jW - axis crossing:", 0, 2, 'L')
-pdf.set_font('arial', '', 11.0)
+#pdf.set_font('arial', 'B', 12.0)
+#pdf.cell(200, 10, "jW - axis crossing:", 0, 2, 'L')
+#pdf.set_font('arial', '', 11.0)
 if omega[0][0] != 0:
     s=omega[0][0]*1j
     power=0
@@ -218,13 +218,13 @@ if omega[0][0] != 0:
     all_elements = np.concatenate([num_with_values,den_with_values])
     value_of_K = np.real(solve(np.sum(all_elements), K))
     print("The jW-axis crossing occurs at: "+ str(round(omega[0][0],6)) + " with a value of K of: " + str(value_of_K[0])[0:7])
-    pdf.cell(200, 10,"The jW-axis crossing occurs at: "+ str(round(omega[0][0],6)) + " with a value of K of: " + str(value_of_K[0])[0:6] , 0, 2, 'L')
+   ##pdf.cell(200, 10,"The jW-axis crossing occurs at: "+ str(round(omega[0][0],6)) + " with a value of K of: " + str(value_of_K[0])[0:6] , 0, 2, 'L')
     print()
 else:
     control.sisotool(G)
     print("There is no crossing of the jW-axis, review sisotool plot")
-    pdf.cell(200, 10,"There is no crossing of the jW-axis, review sisotool plot", 0, 2, 'L')
-f = plt.figure()
-control.sisotool(G)
-plt.show()
-pdf.output('control_root_locus_4.pdf', 'F')
+   ##pdf.cell(200, 10,"There is no crossing of the jW-axis, review sisotool plot", 0, 2, 'L')
+#f = plt.figure()
+#control.sisotool(G)
+#plt.show()
+#pdf.output('control_root_locus_4.pdf', 'F')
