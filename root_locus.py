@@ -17,6 +17,8 @@ num1=[1]
 den1=[1,3,2,0]
 num3=[1,3]
 den3=[1,7,14,8,0]
+num5=[1]
+den5=[1,3,2,0]
 pdf = FPDF()
 #pdf.add_page()
 #pdf.set_xy(10, 10)
@@ -24,8 +26,8 @@ pdf = FPDF()
 #pdf.cell(200, 10, "Root Locus answersheet", 0, 2, 'L')
 #pdf.cell(200, 10, "-José Toscano", 0, 2, 'L')
 
-num=num4
-den=den4
+num=num5
+den=den5
 G = control.tf(num,den)
 print(G)
 poles, zeros = control.pzmap(G, True, True)
@@ -142,8 +144,10 @@ for i in range(1,len(zeros)+1):
         y1 = np.imag(zeros[i-1])
         x2 = np.real(zeros[j])
         y2 = np.imag(zeros[j])
-        if((x1==x2)and(y1==-y2)and(y1!=0)):
+        if(x1==x2):
             angle=90
+        if((x1==x2)and(y1==y2)):
+            angle=0
         if (x1 != x2):
             angle = math.degrees(math.atan((y2-y1)/(x2-x1)))
             if ( x1 < x2 and angle==0):
@@ -159,8 +163,10 @@ for i in range(1,len(zeros)+1):
         y1 = np.imag(zeros[i-1])
         x2 = np.real(poles[k])
         y2 = np.imag(poles[k])
-        if((x1==x2)and(y1==-y2)and(y1!=0)):
+        if(x1==x2):
             angle=90
+        if((x1==x2)and(y1==y2)):
+            angle=0
         if (x1 != x2):
             angle = math.degrees(math.atan((y2-y1)/(x2-x1)))
             if ( x1 < x2 and angle==0):
@@ -228,3 +234,98 @@ else:
 #control.sisotool(G)
 #plt.show()
 #pdf.output('control_root_locus_4.pdf', 'F')
+
+testing_point = -0.5+1j
+for i in range(1,2):
+    #print("testing point is: " + str(poles[i-1]))
+    sum_of_poles_angles=0
+    sum_of_zeros_angles=0
+    for j in range(0,len(zeros)):
+        angle=0
+        x1 = np.real(testing_point)
+        y1 = np.imag(testing_point)
+        x2 = np.real(zeros[j])
+        y2 = np.imag(zeros[j])
+        if(x1==x2):
+            angle=90
+        if((x1==x2)and(y1==y2)):
+            angle=0
+        if (x1 != x2):
+            angle = math.degrees(math.atan((y2-y1)/(x2-x1)))
+            if ( x1 < x2 and angle==0):
+                angle = 180
+            if ( x2 < x1 and angle==0):
+                angle = 0
+        if angle < 0:
+            angle = 180-abs(angle) 
+        sum_of_zeros_angles += angle
+        print("  angle for point" + str(zeros[j]) + " is " + str(angle))
+    print("sum of zeros: " + str(sum_of_zeros_angles)    )
+    for k in range(0,len(poles)):
+        angle=0
+        x1 = np.real(testing_point)
+        y1 = np.imag(testing_point)
+        x2 = np.real(poles[k])
+        y2 = np.imag(poles[k])
+        if(x1==x2):
+            angle=90
+        if((x1==x2)and(y1==y2)):
+            angle=0
+        if (x1 != x2):
+            angle = math.degrees(math.atan((y2-y1)/(x2-x1)))
+            if ( x1 < x2 and angle==0):
+                angle = 180
+            if ( x2 < x1 and angle==0):
+                angle = 0
+        if angle < 0:
+            angle = 180-abs(angle) 
+        sum_of_poles_angles += angle
+        print("  angle for point" + str(poles[k]) + " is " + str(angle))
+    print("sum of poles: " + str(sum_of_poles_angles)    )
+    sum_angles_zeros = np.sum(sum_of_zeros_angles)
+    sum_angles_poles = np.sum(sum_of_poles_angles)
+    angle_of_testing_point = sum_angles_zeros - sum_angles_poles
+    if angle_of_testing_point < 0:
+        angle_of_testing_point += 360
+
+    print("Angle for testing point " + str(testing_point) + "is:" + str(angle_of_testing_point))
+    if (angle_of_testing_point/180)%2 == 1:
+        print("the point" + str(testing_point) + " does belong to the root loccus")
+    else:
+        print((angle_of_testing_point/180)%1)
+        angle_defficit = 180-((angle_of_testing_point/180)%1 * 180)
+        print("the point" + str(testing_point) + " does not belong to the root loccus. The angle deficit is: " + str(angle_defficit) + " degrees, or " + str(round(math.radians(angle_defficit),4)) + " radians.")
+
+#Lead Controler Design
+new_zero = np.real(testing_point)
+angle_new_pole= 90 - angle_defficit
+distance_pole_zero = (np.imag(testing_point)/math.tan(math.radians(angle_new_pole)))
+new_pole = new_zero - distance_pole_zero
+print("The zero of the Lead Controler is in S=" +str(new_zero))
+print("The pole of the Lead Controler is in S=" +str(new_pole))
+#evaluate G*Controler and find magnitude
+num_evaluated=1
+den_evaluated=1
+num_and_controler_zero = np.concatenate([zeros, [new_zero]])
+den_and_controler_pole = np.concatenate([poles, [new_pole]])
+for i in range(0,len(num_and_controler_zero)):
+    real_part = -np.real(num_and_controler_zero[i])+np.real(testing_point)
+    imag_part = -np.imag(num_and_controler_zero[i])+np.imag(testing_point)
+    sum_value = np.complex(real_part,imag_part)
+    num_evaluated *= sum_value
+    #print(num_evaluated)
+for i in range(0,len(den_and_controler_pole)):
+    real_part = -np.real(den_and_controler_pole[i])+np.real(testing_point)
+    imag_part = -np.imag(den_and_controler_pole[i])+np.imag(testing_point)
+    sum_value = np.complex(real_part,imag_part)
+    den_evaluated *= sum_value
+    #print(den_evaluated)
+G_evaluated_testpoint = num_evaluated/den_evaluated
+controller = control.tf([1, -new_zero],[1,-new_pole])
+lead_controller = control.series(G,controller)
+print(lead_controller)
+response = control.evalfr(lead_controller, testing_point)
+value_of_K_testing_point = round(1/abs(response),4)
+magnitud_K = (1/abs(response))
+print(magnitud_K)
+
